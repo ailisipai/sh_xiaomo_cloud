@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="sh_xiaomo_admin" />
+        <module name="sh_xiaomo_openfeign" />
+        <module name="sh_xiaomo_eureka" />
+        <module name="sh_xiaomo_api" />
+        <module name="sh_xiaomo_authority" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="sh_xiaomo_admin" options="-parameters" />
+      <module name="sh_xiaomo_api" options="-parameters" />
+      <module name="sh_xiaomo_authority" options="-parameters" />
+      <module name="sh_xiaomo_eureka" options="-parameters" />
+      <module name="sh_xiaomo_openfeign" options="-parameters" />
+    </option>
+  </component>
+</project>

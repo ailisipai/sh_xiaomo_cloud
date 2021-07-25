@@ -1,0 +1,23 @@
+server:
+  port: 8081
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    appname: xiaomo_authority
+    instance-id: sh_xiaomo_authority
+# 配置mysql
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.93.168:3306/wpp001?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: XiaoMo@2020
+    dbcp2:
+      min-idle: 5               # 数据库连接池最小连接数量
+      initial-size: 5           # 数据库连接池初始化链数量
+      max-total: 5              # 数据库连接池最大链接数量
+      max-wait-millis: 200      # 等待数据获取的最大超时时间 毫秒

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--到如属性配置文件 :数据库链接属性-->
+    <properties resource="generator.properties"></properties>
+    <!--指定数据库链接的驱动-->
+    <classPathEntry location="${jdbc.driverLocation}"/>
+    <context id="default" targetRuntime="MyBatis3">
+        <!-- optional，旨在创建class时，对注释进行控制 -->
+        <commentGenerator>
+
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--jdbc的数据库连接 -->
+        <jdbcConnection
+                driverClass="${jdbc.driverClass}"
+                connectionURL="${jdbc.connectionURL}"
+                userId="${jdbc.userId}"
+                password="${jdbc.password}">
+        </jdbcConnection>
+        <!--类型处理器：在数据库类型和Java类型之间做数据类型转化女-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--
+            Model 模型生成器用来生成含有主键key的类，记录类，以及查询Example类
+            targetPackage：指定对象模型生成的位置
+            targetProject：指定该项目下所在的路径
+        -->
+        <javaModelGenerator targetPackage="com.xiaomo.auth.pojo" targetProject="./src/main/java">
+            <!--是否允许子包-->
+            <property name="enbaleSubPackages" value="false"/>
+            <!--是否创建构造函数-->
+            <property name="constructorBased" value="alse"/>
+            <!--是否对数据做trim操作-->
+            <property name="trimStrings" value="true"/>
+            <!--是否创建对象不可改变，就是不提供setting 方法-->
+            <property name="immutable" value="false"/>
+        </javaModelGenerator>
+        <!--Mapper 文件生成路径设置-->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="./src/main/resources">
+            <!--是否允许创建子包-->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.xiaomo.auth.dao"
+                             targetProject="./src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+        <!--对应表信息-->
+        <table tableName="SYS_USER_INFO" domainObjectName="UserInfo"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="SYS_ROLE_INFO" domainObjectName="RoleInfo"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+
+        <table tableName="SYS_RESOURCE_INFO" domainObjectName="ResourceInfo"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="SYS_ROLE_USER_RELATION" domainObjectName="RoleUserRelation"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="SYS_ROLE_RESOURCE_RELATION" domainObjectName="RoleResourceRelation"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+    </context>
+</generatorConfiguration>
