@@ -2,12 +2,16 @@ package com.xiaomo.auth.jwt;
 
 
 import com.xiaomo.api.entities.UserInfo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.security.Signature;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -24,17 +28,16 @@ public class JwtUtil {
 
         /**
          * 制定签名的时候，现制定签名算法，这部分jwt已经封装好了
-         *
          */
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         //生成jwt的时间
         Long timeMillis = System.currentTimeMillis();
         Date date = new Date(timeMillis);
         // 创建 payload的私有声明，根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
-        Map<String,Object> map = new HashMap<>();
-        map.put("id",user.getId());
-        map.put("username",user.getUserName());
-        map.put("password" ,user.getPassword());
+        Map<String,Object> claim = new HashMap<>();
+        claim.put("id",user.getId());
+        claim.put("username",user.getUserName());
+        claim.put("password" ,user.getPassword());
         /**
          * 生成签名的时候使用的秘钥secret,这个方法本地封装了的，
          * 一般可以从本地配置文件中读取，切记这个秘钥不能外露哦。
@@ -45,7 +48,69 @@ public class JwtUtil {
         String key = user.getPassword();
         //生成签发人
         String subject = user.getUserName();
+        /**
+         * 添加payload的便准声明和私有声明，
+         * 创建一个jwtbiulder,设置jwt的body
+         */
+        JwtBuilder jwtBuilder = Jwts.builder()
+                // 如果有私有声明，一定要先设置这个自己创建的私有的声明，这个是给builder的claim赋值，一旦写在标准的声明赋值之后，就是覆盖了那些标准的声明的
+                .setClaims(claim)
+                //设置jti(JWT ID)：是JWT的唯一标识，根据业务需要，这个可以设置为一个不重复的值，主要用来作为一次性token,从而回避重放攻击。
+                .setId(UUID.randomUUID().toString())
+                //iat: jwt的签发时间
+                .setIssuedAt(date)
+                //代表这个JWT的主体，即它的所有人，这个是一个json格式的字符串，可以存放什么userid，roldid之类的，作为什么用户的唯一标志。
+                .setSubject(subject)
+                //设置签名使用的签名算法和签名使用的秘钥
+                .signWith(signatureAlgorithm, key);
+        if (ttlMillis >= 0) {
+            long expMillis = timeMillis + ttlMillis;
+            Date exp = new Date(expMillis);
+            //设置过期时间
+            jwtBuilder.setExpiration(exp);
+        }
+        return jwtBuilder.compact();
+    }
 
-        return "";
+    /**
+     * Token的解密
+     * @param token 加密后的token
+     * @param user
+     * @return
+     */
+    public static Claims parseJWT(String token, UserInfo user) {
+        //签名秘钥，和生成的签名的秘钥一模一样
+        String key = user.getPassword();
+
+        //得到DefaultJwtParser
+        Claims claims = Jwts.parser()
+                //设置签名的秘钥
+                .setSigningKey(key)
+                //设置需要解析的jwt
+                .parseClaimsJws(token).getBody();
+        return claims;
+    }
+    /**
+     * 校验token
+     * 在这里可以使用官方的校验，我这里校验的是token中携带的密码于数据库一致的话就校验通过
+     * @param token
+     * @param user
+     * @return
+     */
+    public static Boolean isVerify(String token, UserInfo user) {
+        //签名秘钥，和生成的签名的秘钥一模一样
+        String key = user.getPassword();
+
+        //得到DefaultJwtParser
+        Claims claims = Jwts.parser()
+                //设置签名的秘钥
+                .setSigningKey(key)
+                //设置需要解析的jwt
+                .parseClaimsJws(token).getBody();
+
+        if (claims.get("password").equals(user.getPassword())) {
+            return true;
+        }
+        return false;
     }
 }

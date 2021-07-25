@@ -6,16 +6,18 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
-    appname: xiaomo_authority
+    appname: sh_xiaomo_authority
     instance-id: sh_xiaomo_authority
 # 配置mysql
 spring:
+  application:
+    name: sh_xiaomo_authority
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.93.168:3306/wpp001?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://192.168.1.5:3306/xiaomo?useUnicode=true&characterEncoding=utf-8
     username: root
-    password: XiaoMo@2020
+    password: xiaomo
     dbcp2:
       min-idle: 5               # 数据库连接池最小连接数量
       initial-size: 5           # 数据库连接池初始化链数量
